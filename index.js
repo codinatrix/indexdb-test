@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	if (idbSupported) {
 		var openRequest = window.indexedDB.open("testdb", 1) //Parameters db name and version
 		
+		//Called when db version changes
 		openRequest.onupgradeneeded = function(e) {
 			hello_el.append("Upgrading...");
 		}
