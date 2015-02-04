@@ -17,6 +17,13 @@ document.addEventListener("DOMContentLoaded", function() {
 		//Called when db version changes
 		openRequest.onupgradeneeded = function(e) {
 			hello_el.append("Upgrading...");
+			
+			var preDb = e.target.result;
+			
+			//Create an object store if it doesn't exist already
+			if (!preDb.objectStoreNames.contains("colours")) {
+				preDb.createObjectStore("colours")
+			}
 		}
 		
 		openRequest.onsuccess = function(e) {
