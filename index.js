@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		//Uncomment this to delete the database before running
 		//indexedDB.deleteDatabase("testdb");
 		
-		var openRequest = window.indexedDB.open("testdb", 5) //Parameters db name and version
+		var openRequest = window.indexedDB.open("testdb", 7) //Parameters db name and version
 		var newTable = false;
 		
 		//Called when db version changes
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 		
 		openRequest.onerror = function(e) {
-			addText("Error: ");
+			addText("Error: " + e.currentTarget.error.message);
 		}
 	}	
 	
