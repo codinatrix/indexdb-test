@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
 			if (newTable) {
 				populateDb();
 			}
+			document.querySelector("#addButton").addEventListener("click", addColourFromInput, false);
 		}
 		
 		openRequest.onerror = function(e) {
@@ -98,13 +99,24 @@ function addColour(colour) {
 	//Params: Colour object, id (obviously shouldn't be hardcoded)
 	var request = store.add(colour);
 	
-	request.onerror = function(e) {
-		addText("Error: " + e.target.error.name + " ");
+	request.onerror = function() {
+		addText("Error adding colour to database.");
 	}
 	
-	request.onsuccess = function(e) {
-		addText("Successfully added colour to database. ")
+	request.onsuccess = function() {
+		addText("Successfully added " + colour.name + " to database. ")
 	}
+}
+
+function addColourFromInput() {
+	var name = document.querySelector("#name").value;
+	var hex = document.querySelector("#hex").value;
+	
+	var colour = {
+		name: name,
+		hex: hex
+	}
+	addColour(colour);
 }
 
 
