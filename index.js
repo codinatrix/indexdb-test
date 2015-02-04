@@ -34,10 +34,36 @@ document.addEventListener("DOMContentLoaded", function() {
 		openRequest.onerror = function(e) {
 			hello_el.append("Error :(")
 		}
-	}
-	
-	
+	}	
 	
 },false);
-	
 
+//Creates some sample data
+function getColourData() {
+	var colours = {};
+	colours['red'] = {
+		name:"red"
+		hex:"FF0000"
+	}
+	colours['orange'] = {
+		name:"orange"
+		hex:"FFA500"
+	}
+	colours['yellow'] = {
+		name:"yellow"
+		hex:"FFFF00"
+	}
+	colours['green'] = {
+		name:"green"
+		hex:"008000"
+	}
+	colours['blue'] = {
+		name:"blue"
+		hex:"0000FF"
+	}
+	colours['purple'] = {
+		name:"purple"
+		hex:"800080"
+	}
+}
+	
