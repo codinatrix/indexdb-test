@@ -50,9 +50,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function addText(text) {
 	if (!hello_el) {
-		var hello_el = $("#hello");
+		var hello_el = document.getElementById("hello");
 	}
-	hello_el.append(text);
+	hello_el.innerHTML = hello_el.innerHTML + text;
 }
 
 //Creates some sample data
