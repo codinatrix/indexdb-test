@@ -12,7 +12,11 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 	
 	if (idbSupported) {
-		var openRequest = window.indexedDB.open("testdb", 3) //Parameters db name and version
+		//Uncomment this to delete the database before running
+		//indexedDB.deleteDatabase("testdb");
+		
+		var openRequest = window.indexedDB.open("testdb", 5) //Parameters db name and version
+		var newTable = false;
 		
 		//Called when db version changes
 		openRequest.onupgradeneeded = function(e) {
@@ -22,18 +26,21 @@ document.addEventListener("DOMContentLoaded", function() {
 			
 			//Create an object store if it doesn't exist already
 			if (!preDb.objectStoreNames.contains("colours")) {
-				preDb.createObjectStore("colours")
+				preDb.createObjectStore("colours", {autoIncrement: true});
+				newTable = true;
 			}
 		}
 		
 		openRequest.onsuccess = function(e) {
 			addText("indexedDB opened. ");
 			db = e.target.result;
-			addColour();
+			if (newTable) {
+				populateDb();
+			}
 		}
 		
 		openRequest.onerror = function(e) {
-			addText("Error :(")
+			addText("Error: ");
 		}
 	}	
 	
@@ -47,41 +54,41 @@ function addText(text) {
 }
 
 //Creates some sample data
-function getColourData() {
-	var colours = {};
-	colours['red'] = {
+function populateDb() {
+	var colours = [];
+	colours[0] = {
 		name:"red",
 		hex:"FF0000"
 	}
-	colours['orange'] = {
+	colours[1] = {
 		name:"orange",
 		hex:"FFA500"
 	}
-	colours['yellow'] = {
+	colours[2] = {
 		name:"yellow",
 		hex:"FFFF00"
 	}
-	colours['green'] = {
+	colours[3] = {
 		name:"green",
 		hex:"008000"
 	}
-	colours['blue'] = {
+	colours[4] = {
 		name:"blue",
 		hex:"0000FF"
 	}
-	colours['purple'] = {
+	colours[5] = {
 		name:"purple",
 		hex:"800080"
 	}
 	
-	return colours;
+	for (var i = 0; i < colours.length; i++) {
+		addColour(colours[i]);
+	}
 }
 	
 
-function addColour(e) {
-	
-	colours = getColourData();
-	
+function addColour(colour) {
+		
 	//Params: Array of tables (just one table in this case), readwrite or readonly
 	var transaction = db.transaction(["colours"], "readwrite");
 	//Get objectStore from transaction
@@ -89,8 +96,7 @@ function addColour(e) {
 	
 	//Add a colour to db
 	//Params: Colour object, id (obviously shouldn't be hardcoded)
-	var request = store.add(colours['red'], 1);
-	var request = store.add(colours['orange'], 2);
+	var request = store.add(colour);
 	
 	request.onerror = function(e) {
 		addText("Error: " + e.target.error.name + " ");
