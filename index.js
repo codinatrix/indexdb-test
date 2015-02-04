@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", function() {
 				populateDb();
 			}
 			document.querySelector("#addButton").addEventListener("click", addColourFromInput, false);
+			document.querySelector("#getButton").addEventListener("click", getColourFromInput, false);
 		}
 		
 		openRequest.onerror = function(e) {
@@ -119,4 +120,23 @@ function addColourFromInput() {
 	addColour(colour);
 }
 
-
+function getColourFromInput(e) {
+	var key = document.querySelector("#key").value;
+	if(key === "" || isNaN(key)) return;
+	
+	var transaction = db.transaction(["colours"],"readonly");
+    var store = transaction.objectStore("colours");
+ 
+    var request = store.get(Number(key));
+	
+	request.onsuccess = function(e) {
+		var result = e.target.result;
+		if (result) {
+			str = "<p>The colour is <span style='color:#" + result.hex + ";'>" + result.name + "</span>.</p>";
+		}
+		else {
+			str = "No colour has that id.";
+		}
+		document.querySelector("#colourResult").innerHTML = str;
+	}
+}
