@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	var idbSupported = false;
 	var hello_el = $("#hello");
 	
-	if("indexedDB" in window) {
+	if(typeof window.indexedDB !== 'undefined') {
 		idbSupported = true;
 		hello_el.text("indexedDB is supported. ")
 	} else {
@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 	
 	if (idbSupported) {
-		var openRequest = indexedDB.open("testdb", 1) //Parameters db name and version
+		var openRequest = window.indexedDB.open("testdb", 1) //Parameters db name and version
 		
 		openRequest.onupgradeneeded = function(e) {
 			hello_el.append("Upgrading...");
