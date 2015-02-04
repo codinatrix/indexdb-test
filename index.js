@@ -1,22 +1,22 @@
 document.addEventListener("DOMContentLoaded", function() {
 	
 	var idbSupported = false;
-	var hello_el = $("#hello");
+	
 	
 	if(typeof window.indexedDB !== 'undefined') {
 		idbSupported = true;
-		hello_el.text("indexedDB is supported. ")
+		addText("indexedDB is supported. ")
 	} else {
 		idbSupported = false;
-		hello_el.text("indexedDB is not supported.")
+		addText("indexedDB is not supported.")
 	}
 	
 	if (idbSupported) {
-		var openRequest = window.indexedDB.open("testdb", 1) //Parameters db name and version
+		var openRequest = window.indexedDB.open("testdb", 3) //Parameters db name and version
 		
 		//Called when db version changes
 		openRequest.onupgradeneeded = function(e) {
-			hello_el.append("Upgrading...");
+			addText("Upgrading...");
 			
 			var preDb = e.target.result;
 			
@@ -27,43 +27,78 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 		
 		openRequest.onsuccess = function(e) {
-			hello_el.append("indexedDB opened.");
+			addText("indexedDB opened. ");
 			db = e.target.result;
+			addColour();
 		}
 		
 		openRequest.onerror = function(e) {
-			hello_el.append("Error :(")
+			addText("Error :(")
 		}
 	}	
 	
 },false);
 
+function addText(text) {
+	if (!hello_el) {
+		var hello_el = $("#hello");
+	}
+	hello_el.append(text);
+}
+
 //Creates some sample data
 function getColourData() {
 	var colours = {};
 	colours['red'] = {
-		name:"red"
+		name:"red",
 		hex:"FF0000"
 	}
 	colours['orange'] = {
-		name:"orange"
+		name:"orange",
 		hex:"FFA500"
 	}
 	colours['yellow'] = {
-		name:"yellow"
+		name:"yellow",
 		hex:"FFFF00"
 	}
 	colours['green'] = {
-		name:"green"
+		name:"green",
 		hex:"008000"
 	}
 	colours['blue'] = {
-		name:"blue"
+		name:"blue",
 		hex:"0000FF"
 	}
 	colours['purple'] = {
-		name:"purple"
+		name:"purple",
 		hex:"800080"
 	}
+	
+	return colours;
 }
 	
+
+function addColour(e) {
+	
+	colours = getColourData();
+	
+	//Params: Array of tables (just one table in this case), readwrite or readonly
+	var transaction = db.transaction(["colours"], "readwrite");
+	//Get objectStore from transaction
+	var store = transaction.objectStore("colours");
+	
+	//Add a colour to db
+	//Params: Colour object, id (obviously shouldn't be hardcoded)
+	var request = store.add(colours['red'], 1);
+	var request = store.add(colours['orange'], 2);
+	
+	request.onerror = function(e) {
+		addText("Error: " + e.target.error.name + " ");
+	}
+	
+	request.onsuccess = function(e) {
+		addText("Successfully added colour to database. ")
+	}
+}
+
+
